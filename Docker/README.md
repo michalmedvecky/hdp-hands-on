@@ -5,7 +5,7 @@
 More info on how to get ansible up and running can be found in ansible-library README.
 
 * `ansible-playbook create-docker.yml`
-* `script/update_inventory.py
+* `script/update_inventory.py`
 * `ansible-playbook docker.yml`
 * ssh to the newly created instance (`ssh ubuntu@<instance-ip>`)
 
