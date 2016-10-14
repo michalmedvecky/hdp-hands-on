@@ -11,6 +11,10 @@
   when: hdfs_datanode_data_dirs is defined
   tags: [hdfs]
 
+- name: create /var/run/
+  file: path=/var/run/hdfs state=directory owner=hdfs group=hadoop
+  when: "'hdfs-datanode' in group_names"
+
 - include: ../../../includes/tasks/systemd.yml script_name='hdfs-datanode'
   tags: [hdfs]
 

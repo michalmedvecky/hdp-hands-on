@@ -24,8 +24,8 @@
   when: "'hdfs-primary' in group_names and hdfs_force_format is defined"
   become: yes
   become_user: hdfs
-  run_once: yes
   ignore_errors: yes
+  tags: [hdfs,format-zk]
 
 - name: format hdfs namenode data directory
   command: /usr/bin/hdfs namenode -format
