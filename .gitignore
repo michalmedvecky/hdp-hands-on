@@ -1,2 +1,3 @@
 *.retry
 misko.pem
+ansible/inventory/hosts_aws
