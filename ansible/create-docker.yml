@@ -1,0 +1,21 @@
+- hosts: localhost
+  connection: local
+  gather_facts: False
+  tasks:
+    - name: Provision single docker node on Ubuntu
+      ec2:
+         key_name: misko
+         instance_type: '{{ item.type }}'
+         region: ap-southeast-2
+         image: ami-623c0d01
+         wait: yes
+         group: launch-wizard-1 
+         count: 1
+         vpc_subnet_id: subnet-583d681e
+         assign_public_ip: yes
+         instance_tags:
+           hostname: '{{ item.hostname }}'
+           tags: '{{ item.tags }}'
+      with_items:
+        - { type: 't2.large', hostname: 'docker-1', tags: 'docker' }
+

@@ -1,0 +1,10 @@
+---
+
+- name: create .ssh dir
+  file: path=/var/lib/hadoop-hdfs/.ssh/ owner=hdfs mode=0700 state=directory
+
+- name: add ssh private key for Namenode fencing
+  template: src=id_rsa.j2 dest=/var/lib/hadoop-hdfs/.ssh/id_rsa owner=hdfs mode=0600
+
+- name: add ssh authorized key for Namenode fencing
+  template: src=id_rsa.pub.j2 dest=/var/lib/hadoop-hdfs/.ssh/authorized_keys owner=hdfs mode=0600

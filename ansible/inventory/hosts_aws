@@ -1,0 +1,41 @@
+[aws]
+datanode-1 ansible_ssh_host=52.62.87.159 private_ip=172.31.30.97
+datanode-2 ansible_ssh_host=52.64.238.120 private_ip=172.31.24.160
+docker-1 ansible_ssh_host=52.63.95.103 private_ip=172.31.22.198
+master-1 ansible_ssh_host=52.63.11.216 private_ip=172.31.29.91 zookeeper_server_id=1
+master-2 ansible_ssh_host=52.64.62.225 private_ip=172.31.18.72 zookeeper_server_id=2
+master-3 ansible_ssh_host=52.63.149.187 private_ip=172.31.21.173 zookeeper_server_id=3
+
+[docker]
+docker-1
+
+[hdfs-datanode]
+datanode-1
+datanode-2
+
+[hdfs-journalnode]
+master-1
+master-2
+master-3
+
+[hdfs-namenode]
+master-1
+master-2
+
+[hdfs-primary]
+master-1
+
+[hdfs-secondary]
+master-2
+
+[hdp-cluster-1]
+datanode-1
+datanode-2
+master-1
+master-2
+master-3
+
+[zookeeper]
+master-1
+master-2
+master-3

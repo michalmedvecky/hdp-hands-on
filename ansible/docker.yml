@@ -1,0 +1,5 @@
+- hosts: docker
+  become: yes
+  any_errors_fatal: true
+  roles:
+    - docker

@@ -1,0 +1,30 @@
+---
+
+- name: Create directory for logs
+  file: path=/var/log/hdfs owner=hdfs group=hadoop state=directory mode=0755
+  tags: [hdfs]
+
+- name: configure hdfs
+  template:
+    src: '{{ item }}.xml.j2'
+    dest: /etc/hadoop/conf/{{ item }}.xml
+  with_items:
+    - hdfs-site
+  tags:
+    - hdfs
+  notify:
+    - restart hdfs-namenode
+    - restart hdfs-datanode
+    - restart hdfs-journalnode
+
+- include: setup_namenode_fencing.yml
+  when: '"hdfs-namenode" in group_names'
+
+- include: journalnode.yml
+  when: '"hdfs-journalnode" in group_names'
+
+- include: namenode.yml
+  when: '"hdfs-namenode" in group_names'
+
+- include: datanode.yml
+  when: '"hdfs-datanode" in group_names'

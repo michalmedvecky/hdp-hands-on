@@ -1,0 +1,15 @@
+[Unit]
+Description=HDFS journalnode
+Before=
+After=network.target
+
+[Service]
+Type=simple
+User=hdfs
+Environment=HADOOP_LOG_DIR=/var/log/hdfs HADOOP_LOGFILE=hdfs-namenode.log HADOOP_ROOT_LOGGER=INFO,RFA HADOOP_SECURITY_LOGGER=INFO,RFAS JAVA_HOME={{ java_home }}
+ExecStart=/bin/hdfs namenode
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
+

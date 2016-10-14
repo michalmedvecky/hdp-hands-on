@@ -1,0 +1,11 @@
+hadoop_cluster: hdp-cluster-1
+java_home: /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.102-1.b14.el7_2.x86_64/jre/
+
+
+hdfs_replication: 2
+hdfs_namenode_name_dir: /var/lib/hadoop-hdfs/name
+hadoop_conf_dir: /etc/hadoop/conf/
+hdfs_namenode_checkpoint_dir: /var/lib/hadoop-hdfs/
+hdfs_journalnode_data_dir: /var/lib/hadoop-hdfs/journal
+hdfs_datanode_data_dir: /var/lib/hdfs/data/
+
