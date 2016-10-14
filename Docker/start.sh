@@ -1,4 +1,4 @@
-#!/vin/bash
+#!/bin/bash
 
 cd image
 docker build -t misko/kafka .
