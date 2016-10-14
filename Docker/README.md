@@ -23,6 +23,6 @@ The playbook is not mine, it's googled and taken from Github page (link in the r
 * creates a docker network kafkanet
 * start 3 instances of kafka (accessible via container IPs only)
 
-##b) Monitoring system with metrics for host, containers and Kafka brokers.
+## b) Monitoring system with metrics for host, containers and Kafka brokers.
 
 TBD
