@@ -1,0 +1,11 @@
+---
+
+# this task is kept for backward compatibility. When we stop using host metadata in GCE, we can remove it.
+- name: create hdfs journalnode data dir
+  file: path={{ hdfs_journalnode_data_dir }} state=directory owner=hdfs group=hadoop
+  register: create_hdfs_journalnode_data_dir
+
+- include: ../../../includes/tasks/systemd.yml script_name="hdfs-journalnode"
+
+- name: start hdfs journalnode
+  service: name=hdfs-journalnode state=started enabled=yes

@@ -1,0 +1,31 @@
+- name: start zookeeper
+  service: name=zookeeper state=started enabled=yes
+  when: '"zookeeper" in group_names'
+
+- name: restart zookeeper
+  service: name=zookeeper state=restarted enabled=yes
+  when: '"zookeeper" in group_names'
+
+- name: start hdfs-namenode
+  service: name=hdfs-namenode state=started enabled=yes
+  when: '"hdfs-namenode" in group_names'
+
+- name: restart hdfs-namenode
+  service: name=hdfs-namenode state=restarted enabled=yes
+  when: '"hdfs-namenode" in group_names'
+
+- name: start hdfs-journalnode
+  service: name=hdfs-journalnode state=started enabled=yes
+  when: '"hdfs-journalnode" in group_names'
+
+- name: restart hdfs-journalnode
+  service: name=hdfs-journalnode state=restarted enabled=yes
+  when: '"hdfs-journalnode" in group_names'
+
+- name: start hdfs-datanode
+  service: name=hdfs-datanode state=started enabled=yes
+  when: '"hdfs-datanode" in group_names'
+
+- name: restart hdfs-datanode
+  service: name=hdfs-datanode state=restarted enabled=yes
+  when: '"hdfs-datanode" in group_names'

@@ -1,38 +1,30 @@
 ---
 
-- name: Install HDFS & Yarn packages
-  yum:
-    name: '{{ item }}'
-    state: installed
-  with_items: [hadoop,hadoop-hdfs,hadoop-libhdfs,hadoop-yarn,hadoop-mapreduce,hadoop-client,openssl]
+- name: Create directory for logs
+  file: path=/var/log/hdfs owner=hdfs group=hadoop state=directory mode=0755
+  tags: [hdfs]
 
-- name: format ZooKeeper HA state
-  command: /usr/bin/hdfs zkfc -formatZK -nonInteractive
-  when: "'hdfs-primary' in group_names"
-  sudo: yes
-  sudo_user: hdfs
-  run_once: yes
-  ignore_errors: yes
+- name: configure hdfs
+  template:
+    src: '{{ item }}.xml.j2'
+    dest: /etc/hadoop/conf/{{ item }}.xml
+  with_items:
+    - hdfs-site
+  tags:
+    - hdfs
+  notify:
+    - restart hdfs-namenode
+    - restart hdfs-datanode
+    - restart hdfs-journalnode
 
-- name: format hdfs namenode data directory
-  command: /usr/bin/hdfs namenode -format
-  when: '(create_hdfs_namenode_data_dir.changed and ("hdfs-primary" in group_names or hadoop_ha is not defined)) and hdfs_dont_format is not defined'
-  become: yes
-  become_user: hdfs
+- include: setup_namenode_fencing.yml
+  when: '"hdfs-namenode" in group_names'
 
-- name: start hdfs namenode
-  service: name=hdfs-namenode state=started enabled=yes
-  when: '(create_hdfs_namenode_data_dir.changed and ("hdfs-primary" in group_names or hadoop_ha is not defined)) and hdfs_dont_format is not defined'
+- include: journalnode.yml
+  when: '"hdfs-journalnode" in group_names'
 
-- name: format hdfs namenode data directory on secondary node
-  command: /usr/bin/hdfs namenode -bootstrapStandby
-  when: '(create_hdfs_namenode_data_dir.changed and "hdfs-secondary" in group_names) and (hadoop_ha is defined) and hdfs_dont_format is not defined'
-  sudo: yes
-  sudo_user: hdfs
+- include: namenode.yml
+  when: '"hdfs-namenode" in group_names'
 
-- name: start hdfs namenode
-  service: name=hdfs-namenode state=started enabled=yes
-
-- name: start hdfs zkfc
-  service: name=hdfs-zkfc state=started enabled=yes
-  when: hadoop_ha is defined
+- include: datanode.yml
+  when: '"hdfs-datanode" in group_names'

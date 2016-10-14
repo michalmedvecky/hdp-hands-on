@@ -2,10 +2,10 @@
   connection: local
   gather_facts: False
   tasks:
-    - name: Provision master-1
+    - name: Provision master nodes
       ec2:
          key_name: misko
-         instance_type: t2.micro
+         instance_type: '{{ item.type }}'
          region: ap-southeast-2
          image: ami-e0c19f83
          wait: yes
@@ -14,13 +14,19 @@
          vpc_subnet_id: subnet-583d681e
          assign_public_ip: yes
          instance_tags:
-            hostname: master-1
-            ansible_zookeeper_server_id: 1
-            tags: hdp-cluster-1,zookeeper
-    - name: Provision master-2
+           hostname: '{{ item.hostname }}'
+           tags: '{{ item.tags }}'
+           ansible_zookeeper_server_id: '{{ item.ansible_zookeeper_server_id }}'
+      with_items:
+        - { type: 't2.large', hostname: 'master-1', tags: 'hdp-cluster-1,zookeeper,hdfs-primary,hdfs-namenode,hdfs-journalnode', ansible_zookeeper_server_id: 1 }
+        - { type: 't2.large', hostname: 'master-2', tags: 'hdp-cluster-1,zookeeper,hdfs-secondary,hdfs-namenode,hdfs-journalnode', ansible_zookeeper_server_id: 2 }
+        - { type: 't2.small', hostname: 'master-3', tags: 'hdp-cluster-1,zookeeper,hdfs-journalnode', ansible_zookeeper_server_id: 3 }
+      tags: [master-nodes]
+
+    - name: Provision datanodes
       ec2:
          key_name: misko
-         instance_type: t2.micro
+         instance_type: '{{ item.type }}'
          region: ap-southeast-2
          image: ami-e0c19f83
          wait: yes
@@ -29,21 +35,9 @@
          vpc_subnet_id: subnet-583d681e
          assign_public_ip: yes
          instance_tags:
-            hostname: master-2
-            ansible_zookeeper_server_id: 2
-            tags: hdp-cluster-1,zookeeper
-    - name: Provision master-3
-      ec2:
-         key_name: misko
-         instance_type: t2.micro
-         region: ap-southeast-2
-         image: ami-e0c19f83
-         wait: yes
-         group: launch-wizard-1
-         count: 1
-         vpc_subnet_id: subnet-583d681e
-         assign_public_ip: yes
-         instance_tags:
-            hostname: master-3
-            ansible_zookeeper_server_id: 3
-            tags: hdp-cluster-1,zookeeper
+           hostname: '{{ item.hostname }}'
+           tags: '{{ item.tags }}'
+      with_items:
+        - { type: 't2.small', hostname: 'datanode-1', tags: 'hdp-cluster-1,hdfs-datanode' }
+        - { type: 't2.small', hostname: 'datanode-2', tags: 'hdp-cluster-1,hdfs-datanode' }
+      tags: [datanodes]
