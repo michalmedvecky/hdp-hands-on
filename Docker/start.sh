@@ -7,7 +7,7 @@ cd ..
 docker stop kafka1
 docker stop kafka2
 docker stop kafka3
-docker network delete kafkanet
+docker network rm kafkanet
 docker rm kafka1
 docker rm kafka2
 docker rm kafka3
