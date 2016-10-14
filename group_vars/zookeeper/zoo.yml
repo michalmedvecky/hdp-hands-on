@@ -1,0 +1,2 @@
+zookeeper_data_dir: /var/lib/zookeeper/
+zookeeper_max_client_connections: 50

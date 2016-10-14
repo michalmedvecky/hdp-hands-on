@@ -1,0 +1,10 @@
+- hosts: hdp-cluster-1
+  become: yes
+  roles:
+    - common
+    - { role: zookeeper, when: '"zookeeper" in group_names' }
+#    - { role: hdfs, when: '"hdfs" in group_names' }
+#    - { role: yarn, when: '"yarn" in group_names' }
+#    - { role: mapred, when: '"mapred" in group_names' }
+#    - { role: hbase, when: '"hbase" in group_names' }
+#    - { role: phoenix, when: '"phoenix" in group_names' }

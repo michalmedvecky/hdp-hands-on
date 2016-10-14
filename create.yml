@@ -1,0 +1,49 @@
+- hosts: localhost
+  connection: local
+  gather_facts: False
+  tasks:
+    - name: Provision master-1
+      ec2:
+         key_name: misko
+         instance_type: t2.micro
+         region: ap-southeast-2
+         image: ami-e0c19f83
+         wait: yes
+         group: launch-wizard-1 
+         count: 1
+         vpc_subnet_id: subnet-583d681e
+         assign_public_ip: yes
+         instance_tags:
+            hostname: master-1
+            ansible_zookeeper_server_id: 1
+            tags: hdp-cluster-1,zookeeper
+    - name: Provision master-2
+      ec2:
+         key_name: misko
+         instance_type: t2.micro
+         region: ap-southeast-2
+         image: ami-e0c19f83
+         wait: yes
+         group: launch-wizard-1
+         count: 1
+         vpc_subnet_id: subnet-583d681e
+         assign_public_ip: yes
+         instance_tags:
+            hostname: master-2
+            ansible_zookeeper_server_id: 2
+            tags: hdp-cluster-1,zookeeper
+    - name: Provision master-3
+      ec2:
+         key_name: misko
+         instance_type: t2.micro
+         region: ap-southeast-2
+         image: ami-e0c19f83
+         wait: yes
+         group: launch-wizard-1
+         count: 1
+         vpc_subnet_id: subnet-583d681e
+         assign_public_ip: yes
+         instance_tags:
+            hostname: master-3
+            ansible_zookeeper_server_id: 3
+            tags: hdp-cluster-1,zookeeper

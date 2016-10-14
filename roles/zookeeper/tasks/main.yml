@@ -1,0 +1,72 @@
+---
+
+- name: Add HDP repository
+  yum_repository:
+    name: HDP-2.3.0.0
+    description: "HDP Version - HDP-2.3.0.0"
+    baseurl: http://public-repo-1.hortonworks.com/HDP/centos7/2.x/updates/2.3.0.0
+    state: present
+    gpgkey: http://public-repo-1.hortonworks.com/HDP/centos7/2.x/updates/2.3.0.0/RPM-GPG-KEY/RPM-GPG-KEY-Jenkins
+
+- name: Add HDP repository
+  yum_repository:
+    name: HDP-UTILS-1.1.0.20
+    description: "HDP Utils Version - HDP-UTILS-1.1.0.20"
+    baseurl: http://public-repo-1.hortonworks.com/HDP-UTILS-1.1.0.20/repos/centos7
+    state: present
+    gpgkey: http://public-repo-1.hortonworks.com/HDP/centos7/2.x/updates/2.3.0.0/RPM-GPG-KEY/RPM-GPG-KEY-Jenkins
+
+- name: Install Zookeeper packages
+  yum:
+    name: '{{ item }}'
+    state: installed
+  with_items:
+    - zookeeper
+  tags:
+    - zookeeper
+
+- name: create zookeeper data directory
+  file:
+    path: '{{ zookeeper_data_dir }}'
+    state: directory
+    owner: zookeeper
+    group: hadoop
+  tags:
+    - zookeeper
+
+- name: Symlink HDP crap
+  file: src=/usr/hdp/2.3.0.0-2557/zookeeper dest=/usr/hdp/current/zookeeper-server state=link
+  tags: [zookeeper]
+
+- name: Configure Zookeeper
+  template:
+    src: '{{ item }}.j2'
+    dest: '/etc/zookeeper/conf/{{ item }}'
+  with_items:
+    - zoo.cfg
+    - zookeeper-env.sh
+  notify:
+    - restart zookeeper
+  tags:
+    - zookeeper
+
+- name: set zookeeper's myid
+  template:
+    src: myid.j2
+    dest: '/var/lib/zookeeper/myid'
+    owner: zookeeper
+    group: hadoop
+  notify:
+    - restart zookeeper
+  tags:
+    - zookeeper
+
+- name: systemd start script
+  template:
+    src: zookeeper-systemd.j2
+    dest: /etc/systemd/system/zookeeper.service
+    owner: root
+    group: root
+    mode: 644
+  notify: start zookeeper
+  tags: zookeeper
