@@ -17,9 +17,13 @@ It yet supports only setup of HDFS with HA namenode (journal quorum, zkfc) and Z
 - `apt-get install awscli`
 - setup awscli (`awscli configure`)
 - install ansible >2.1 `pip install ansible` (do not pick the ubuntu package, it's outdated)
+<<<<<<< HEAD
 
 ### Server (or Cloud?) side
 * Credentials for AWS
+- edit `group_vars/all/aws.yml` to adjust your AWS parameters (self-explanatory)
+* Credentials for AWS
+* Create EC2 placement group in the desired region (EC2 dashboard -> Placement Groups -> Create Placement Group - not supported by Ansible)
 * pre-generate ssh key for deployment in AWS console or CLI
 
 ## Deployment
@@ -41,6 +45,21 @@ Run ssh-agent and add your private key
 
 Deploy the cluster
     ansible-playbook -i inventory/hosts_aws hdp.yml -u ec2-user -e hdfs_force_format=yes
+
+## Tags
+
+When provisioning new nodes with this playbook, tags have following meanings:
+* `zookeeper` - machine will run ZK instance. You have to specify `ansible_zookeeper_server_id=<unique number 0..255>"` as well.
+* `hdfs` - machine will be able to access HDFS (but not serving the datanode)
+* `hdfs-namenode` - will run the namenode (only HA state is supported by the playbook). Exactly 2 machines have to be specified among the cluster.
+* `hdfs-journalnode` - will run the journalnode (required for HA). At least 3 machines must be specified.
+* `yarn` - 
+* `yarn-resourcemanager`
+* `mapred`
+* `mapred-historyserver`
+* `yarn-nodemanager`
+* `hdfs-datanode` 
+* `kafka` - kafka brokers, You have to specify `ansible_kafka_broker_id=<unique number 0..255>` as well.
 
 ## How to test
 

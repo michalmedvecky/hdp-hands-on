@@ -2,42 +2,78 @@
   connection: local
   gather_facts: False
   tasks:
+    - name: Create security group
+      ec2_group:
+        name: '{{ hadoop_cluster }}-sg'
+        description: "Dummy group to allow all communication within {{ hadoop_cluster }} and ssh from all the net"
+        region: '{{ aws_region }}'
+        vpc_id: '{{ aws_vpc_id }}'
+        rules:
+          - proto: all
+            group_name: '{{ hadoop_cluster }}-sg'
+          - proto: tcp
+            from_port: 22
+            to_port: 22
+            cidr_ip: 0.0.0.0/0
+      tags: [aws_security_group]
     - name: Provision master nodes
       ec2:
-         key_name: misko
+         key_name: '{{ aws_key }}'
          instance_type: '{{ item.type }}'
-         region: ap-southeast-2
+         region: '{{ aws_region }}'
          image: ami-e0c19f83
          wait: yes
-         group: launch-wizard-1 
+         group: '{{ hadoop_cluster }}-sg'
+#         placement_group: '{{ aws_placement_group }}'
          count: 1
-         vpc_subnet_id: subnet-583d681e
+         vpc_subnet_id: '{{ aws_subnet }}'
          assign_public_ip: yes
          instance_tags:
            hostname: '{{ item.hostname }}'
            tags: '{{ item.tags }}'
            ansible_zookeeper_server_id: '{{ item.ansible_zookeeper_server_id }}'
       with_items:
-        - { type: 't2.large', hostname: 'master-1', tags: 'hdp-cluster-1,zookeeper,hdfs-primary,hdfs-namenode,hdfs-journalnode', ansible_zookeeper_server_id: 1 }
-        - { type: 't2.large', hostname: 'master-2', tags: 'hdp-cluster-1,zookeeper,hdfs-secondary,hdfs-namenode,hdfs-journalnode', ansible_zookeeper_server_id: 2 }
-        - { type: 't2.small', hostname: 'master-3', tags: 'hdp-cluster-1,zookeeper,hdfs-journalnode', ansible_zookeeper_server_id: 3 }
+        - { type: 't2.large', hostname: 'master-1', tags: 'hdp-cluster-1,zookeeper,hdfs-primary,hdfs-namenode,hdfs-journalnode,yarn,yarn-resourcemanager', ansible_zookeeper_server_id: 1 }
+        - { type: 't2.large', hostname: 'master-2', tags: 'hdp-cluster-1,zookeeper,hdfs-secondary,hdfs-namenode,hdfs-journalnode,mapred,mapred-historyserver,yarn,yarn-resourcemanager', ansible_zookeeper_server_id: 2 }
+        - { type: 't2.small', hostname: 'master-3', tags: 'hdp-cluster-1,zookeeper,hdfs-journalnode,mapred,yarn', ansible_zookeeper_server_id: 3 }
       tags: [master-nodes]
 
     - name: Provision datanodes
       ec2:
-         key_name: misko
+         key_name: '{{ aws_key }}'
          instance_type: '{{ item.type }}'
-         region: ap-southeast-2
+         region: '{{ aws_region}}'
          image: ami-e0c19f83
          wait: yes
-         group: launch-wizard-1
+         group: '{{ hadoop_cluster }}-sg'
+#         placement_group: '{{ aws_placement_group }}'
          count: 1
-         vpc_subnet_id: subnet-583d681e
+         vpc_subnet_id: '{{ aws_subnet }}'
          assign_public_ip: yes
          instance_tags:
            hostname: '{{ item.hostname }}'
            tags: '{{ item.tags }}'
       with_items:
-        - { type: 't2.small', hostname: 'datanode-1', tags: 'hdp-cluster-1,hdfs-datanode' }
-        - { type: 't2.small', hostname: 'datanode-2', tags: 'hdp-cluster-1,hdfs-datanode' }
+        - { type: 't2.small', hostname: 'datanode-1', tags: 'hdp-cluster-1,hdfs-datanode,mapred,yarn,yarn-nodemanager' }
+        - { type: 't2.small', hostname: 'datanode-2', tags: 'hdp-cluster-1,hdfs-datanode,mapred,yarn,yarn-nodemanager' }
       tags: [datanodes]
+
+    - name: Provision kafka brokers
+      ec2:
+         key_name: '{{ aws_key }}'
+         instance_type: '{{ item.type }}'
+         region: '{{ aws_region }}'
+         image: ami-e0c19f83
+         wait: yes
+         group: '{{ hadoop_cluster }}-sg'
+#         placement_group: '{{ aws_placement_group }}'
+         count: 1
+         vpc_subnet_id: '{{ aws_subnet }}'
+         assign_public_ip: yes
+         instance_tags:
+           hostname: '{{ item.hostname }}'
+           tags: '{{ item.tags }}'
+      with_items:
+        - { type: 't2.small', hostname: 'kafka-1', tags: 'hdp-cluster-1,hdfs,kafka' }
+        - { type: 't2.small', hostname: 'kafka-2', tags: 'hdp-cluster-1,hdfs,kafka' }
+      tags: [kafka-brokers]

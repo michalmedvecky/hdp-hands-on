@@ -1,0 +1,4 @@
+#!/bin/bash
+export JAVA_HOME={{ java_home }}
+export HADOOP_LIBEXEC_DIR=/opt/hadoop/libexec
+exec /opt/hadoop/bin/yarn "$@"

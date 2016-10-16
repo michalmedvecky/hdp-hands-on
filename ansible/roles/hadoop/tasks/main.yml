@@ -23,7 +23,7 @@
 - name: configure hadoop
   template:
     src: '{{ item }}.xml.j2'
-    dest: /etc/hadoop/conf/{{ item }}.xml
+    dest: '{{ hadoop_conf_dir }}/{{ item }}.xml'
   with_items:
     - core-site
   tags:
@@ -31,7 +31,7 @@
 
 - name: set JAVA_HOME in hadoop-env.sh
   lineinfile:
-    dest: /etc/hadoop/conf/hadoop-env.sh
+    dest: '{{ hadoop_conf_dir }}/hadoop-env.sh'
     line: 'export JAVA_HOME={{ java_home }}'
     regexp: '^export JAVA_HOME='
     insertbefore: 'export JAVA_HOME='

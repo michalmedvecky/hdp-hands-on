@@ -1,0 +1,17 @@
+---
+#FIXME: those second handlers don't work as expected (they are never spawned)
+- name: restart yarn resourcemanager
+  service: name=yarn-resourcemanager state=restarted
+  when: '"yarn-resourcemanager" in group_names and force_restart is defined'
+
+- name: restart yarn resourcemanager
+  debug: msg="Not restarting yarn resourcemanager, use -e force_restart=yes to force restart"
+  when: '"yarn-resourcemanager" in group_names and force_restart is not defined'
+
+- name: restart yarn nodemanager
+  service: name=yarn-nodemanager state=restarted
+  when: '"yarn-nodemanager" in group_names and force_restart is defined'
+
+- name: restart yarn nodemanager
+  debug: msg="Not restarting yarn nodemanager, use -e force_restart=yes to force restart"
+  when: '"yarn-nodemanager" in group_names and force_restart is not defined'
