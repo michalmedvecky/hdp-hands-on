@@ -1,6 +1,0 @@
-aws_region: ap-southeast-2
-aws_key: misko
-aws_subnet: subnet-583d681e
-aws_placement_group: hdp-cluster-1
-aws_vpc_id: vpc-09b4db6c
-

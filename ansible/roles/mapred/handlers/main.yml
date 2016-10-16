@@ -1,5 +1,0 @@
----
-
-- name: restart mapred historyserver
-  service: name=mapred-historyserver state=restarted
-  when: '"mapred-historyserver" in group_names'
