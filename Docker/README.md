@@ -1,5 +1,10 @@
 # Docker assignment
 
+## Release notes
+* tested with ansible 2.1.2.0. 
+* There is one (https://github.com/ansible/ansible/issues/17495|bug) in Ansible 2.1 that prevents docker build module from working. Workaround included in the playbook.
+* There is no module for docker networking in ansible <2.2. Workaround included.
+
 # 2. Separately from 1. create EC2 instance with Docker environment with:
 
 More info on how to get ansible up and running can be found in ansible-library README.

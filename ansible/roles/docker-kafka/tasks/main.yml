@@ -1,0 +1,51 @@
+---
+
+- name: Make directory for build 
+  file: path=/tmp/misko-build-docker state=directory mode=0700
+  tags: [docker-image]
+- name: Copy files for building the image
+  copy: src='{{ item }}' dest=/tmp/misko-build-docker/
+  with_fileglob:
+    - 'image/*'
+  tags: [image]
+# does not work due to bug in ansible 2.1
+#- name: Build docker-kafka image
+#  docker_image:
+#    path: /tmp/misko-build-docker
+#    name: misko/kafka
+#  tags: [docker-image]
+- name: Build docker-kafka image
+  shell: "cd /tmp/misko-build-docker/ && docker build --no-cache -t misko/kafka ."
+  tags: [image]
+- name: Create state store dirs
+  file: path=/mnt/kafka{{item.0}}/{{item.1}} state=directory
+  with_nested:
+    - {1,2,3}
+    - {zookeeper,kafka}
+  tags: [image]
+#- name: Create Docker network
+#  docker_network:
+#    name: kafkanet
+#  tags: [image,deploy]
+#  when: "ansible_version.full >= 2.2"
+- name: Create Docker network
+  shell: "if [ `docker network  ls |grep kafkanet|wc -l` -eq 0 ]; then docker network create kafkanet; fi"
+  tags: [deploy]
+  when: "ansible_version.full < 2.2"
+# net-alias and net not supported in Ansible yet
+#- name: Start kafka containers
+#  docker:
+#    name: 'kafka{{item}}'
+#    image: misko/kafka
+#    state: started
+#    net: kafkanet
+#    net_alias: kafka{{item}}
+#    volumes: 
+#      - '/mnt/kafka{{item}}:/store/'
+#  with_items: [1,2,3]
+#  tags: deploy
+- name: Start kafka containers
+  shell: "docker run --name kafka{{item}} --net=kafkanet --net-alias=kafka{{item}} -v /mnt/kafka{{item}}:/store/ --env ZK_SERVER_ID={{item}} -d misko/kafka"
+  with_items: [1,2,3]
+  tags: [deploy]
+
