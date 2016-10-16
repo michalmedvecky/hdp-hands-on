@@ -9,4 +9,4 @@
     - { role: yarn, when: '"yarn" in group_names' }
     - { role: mapred, when: '"mapred" in group_names' }
     - { role: kafka, when: '"kafka" in group_names' }
-#    - { role: phoenix, when: '"phoenix" in group_names' }
+    - { role: tez, when: '"tez" in group_names' }

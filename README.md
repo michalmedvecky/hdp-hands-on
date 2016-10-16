@@ -8,6 +8,9 @@ It yet supports only setup of HDFS with HA namenode (journal quorum, zkfc) and Z
 * Playbooks don't care about the storage for HDFS. If you want to create HDFS storage space, you should run datanode instances on d2 instances (with local drives). Don't forget to place (at least datanode) instances in the same placement group. Depending on your load, you should use machines with better networking
 * Playbooks do not test your installation, you should do this by yourself
 * No support for other distributions, no check for the distro - you have to be sure where are you installing (or rely on `create.yml` playbook)
+* Machine types are just ones that "can do the install". Not modelled for any kind of load (e.g. namenodes have to be sized with HDFS in mind, kafka should have plenty of RAM, Yarn nodemanagers should provide much more memory than 2G (sooo much memory for Tez required!))
+* Kafka does not have any storage different than the system partition. In production, it should have it's own ext3 partition for the state storage.
+* playbooks do not tune ulimits
 
 ## What will you need
 

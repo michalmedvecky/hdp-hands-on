@@ -1,0 +1,26 @@
+---
+
+- name: Install Tez package
+  yum: name=tez state=installed
+  tags: [tez]
+
+- name: Get HDP version
+  shell: "/bin/hdp-select |grep hadoop-yarn-nodemanager|awk '{print $3}'"
+  register: hdp_version
+  tags: [tez]
+
+- name: Copy Tez to HDFS
+  become_user: hdfs
+  shell: '{{ item }}'
+  with_items:
+    - "hdfs dfs -mkdir -p /hdp/apps/{{ hdp_version.stdout }}/tez/"
+    - "hdfs dfs -put -f /usr/hdp/{{ hdp_version.stdout }}/tez/lib/tez.tar.gz /hdp/apps/{{ hdp_version.stdout }}/tez/"
+    - "hdfs dfs -chown -R hdfs.hadoop /hdp"
+    - "hdfs dfs -chmod -R 555 /hdp/apps/{{ hdp_version.stdout }}/tez"
+    - "hdfs dfs -chmod -R 444 /hdp/apps/{{ hdp_version.stdout }}/tez/tez.tar.gz"
+  tags: [tez]
+
+- name: Configure Tez
+  template: src='{{ item }}.j2' dest='{{ tez_conf_dir }}/{{ item }}' owner=root mode=0644
+  with_items: [tez-site.xml,tez-env.sh]
+  tags: [tez]
