@@ -6,7 +6,7 @@ It yet supports only setup of HDFS with HA namenode (journal quorum, zkfc) and Z
 
 ## What does it not do
 * Playbooks don't care about the storage for HDFS. If you want to create HDFS storage space, you should run datanode instances on d2 instances (with local drives). Don't forget to place (at least datanode) instances in the same placement group. Depending on your load, you should use machines with better networking
-* Playbooks do not test your installation, you should do this by yourselfA
+* Playbooks do not test your installation, you should do this by yourself
 * No support for other distributions, no check for the distro - you have to be sure where are you installing (or rely on `create.yml` playbook)
 
 ## What will you need

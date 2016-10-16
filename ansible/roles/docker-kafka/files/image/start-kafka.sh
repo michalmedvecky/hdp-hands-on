@@ -10,6 +10,7 @@
 
 sed -i 's/broker.id=0/broker.id='$ZK_SERVER_ID'/' /opt/kafka_2.11-0.8.2.1/config/server.properties
 echo "state.dir=/store/kafka/" >> /opt/kafka_2.11-0.8.2.1/config/server.properties
+echo "zookeeper.connect=kafka1:2181,kafka2:2181,kafka3:2181"
 
 # Configure advertised host/port if we run in helios
 if [ ! -z "$HELIOS_PORT_kafka" ]; then
