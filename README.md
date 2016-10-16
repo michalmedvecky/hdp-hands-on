@@ -87,7 +87,7 @@ Provision Yarn only with:
 
 This command returns df -h for hdfs:
 
-    `hdfs dfs -df -h`
+    hdfs dfs -df -h
 
 If you see zeroes or questionmarks, something is wrong.
 
