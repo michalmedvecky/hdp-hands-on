@@ -7,7 +7,7 @@
 - name: configure hdfs
   template:
     src: '{{ item }}.xml.j2'
-    dest: /etc/hadoop/conf/{{ item }}.xml
+    dest: '{{ hadoop_conf_dir }}/{{ item }}.xml'
   with_items:
     - hdfs-site
   tags:

@@ -1,0 +1,15 @@
+[Unit]
+Description=HDFS journalnode
+Before=
+After=network.target
+
+[Service]
+Type=simple
+User=yarn
+Group=hadoop
+Environment=YARN_LOG_DIR=/var/log/yarn YARN_LOGFILE=yarn-nodemanager.log YARN_ROOT_LOGGER=INFO,RFA 
+ExecStart=/usr/bin/yarn nodemanager
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
