@@ -10,3 +10,6 @@ GuessMainPID=no
 RemainAfterExit=yes
 ExecStart=/usr/hdp/current/kafka-broker/bin/kafka start
 ExecStop=/usr/hdp/current/kafka-broker/bin/kafka stop
+
+[Install]
+WantedBy=multi-user.target

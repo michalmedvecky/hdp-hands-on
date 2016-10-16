@@ -20,10 +20,6 @@
     insertbefore: 'export JAVA_HOME='
   tags: [kafka]
 
-- name: Create PID dir
-  file: path=/var/run/kafka owner=root group=root mode=0750 state=directory
-  tags: [kafka]
-
 - name: start kafka broker
-  service: name=kafka enabled=true state=started
+  service: name=kafka enabled=yes state=started
   tags: [kafka]
