@@ -36,19 +36,24 @@ It yet supports only setup of HDFS with HA namenode (journal quorum, zkfc) and Z
     export AWS_ACCESS_KEY_ID=<Your aws credentials>
     export AWS_SECRET_ACCESS_KEY=<Your aws credentials>
 OR
+
     awscli configure
 
 Provision instances:
+
     ansible-playbook create.yml
 
 Update ansible inventory file: (not necessary for `create-docker.yml` playbook)
+
     scripts/update_inventory.py
 
 Run ssh-agent and add your private key
+
     eval `ssh-agent`
     ssh-add /path/to/your/private-key.pem
 
 Deploy the cluster
+
     ansible-playbook -i inventory/hosts_aws hdp.yml -u ec2-user -e hdfs_force_format=yes
 
 IMPORTANT! First (successfull) run has to go with `-e hdfs_force_format=yes`, otherwise the cluster will not work AT ALL.
