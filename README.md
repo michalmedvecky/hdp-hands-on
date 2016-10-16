@@ -17,7 +17,6 @@ It yet supports only setup of HDFS with HA namenode (journal quorum, zkfc) and Z
 - `apt-get install awscli`
 - setup awscli (`awscli configure`)
 - install ansible >2.1 `pip install ansible` (do not pick the ubuntu package, it's outdated)
-<<<<<<< HEAD
 
 ### Server (or Cloud?) side
 * Credentials for AWS

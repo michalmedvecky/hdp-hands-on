@@ -1,0 +1,12 @@
+[Unit]
+SourcePath=/usr/hdp/current/kafka-broker/bin/kafka
+[Service]
+Type=forking
+Restart=no
+TimeoutSec=5min
+IgnoreSIGPIPE=no
+KillMode=process
+GuessMainPID=no
+RemainAfterExit=yes
+ExecStart=/usr/hdp/current/kafka-broker/bin/kafka start
+ExecStop=/usr/hdp/current/kafka-broker/bin/kafka stop

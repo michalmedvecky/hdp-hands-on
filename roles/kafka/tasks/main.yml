@@ -1,0 +1,29 @@
+---
+
+- name: Install Kafka package
+  yum: name=kafka state=installed
+  tags: [kafka]
+
+- name: Configure kafka
+  template: src='{{ item }}.j2' dest='{{ kafka_conf_dir }}/{{ item }}' owner=root mode=0644
+  with_items: [server.properties,kafka-env.sh]
+  tags: [kafka]
+
+- include: ../../../includes/tasks/systemd.yml script_name='kafka'
+  tags: [kafka]
+
+- name: set JAVA_HOME in kafka-env.sh
+  lineinfile:
+    dest: '{{ kafka_conf_dir }}/kafka-env.sh'
+    line: 'export JAVA_HOME={{ java_home }}'
+    regexp: '^export JAVA_HOME='
+    insertbefore: 'export JAVA_HOME='
+  tags: [kafka]
+
+- name: Create PID dir
+  file: path=/var/run/kafka owner=root group=root mode=0750 state=directory
+  tags: [kafka]
+
+- name: start kafka broker
+  service: name=kafka enabled=true state=started
+  tags: [kafka]

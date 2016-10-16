@@ -8,3 +8,5 @@ hadoop_conf_dir: /etc/hadoop/conf/
 hdfs_namenode_checkpoint_dir: /var/lib/hadoop-hdfs/
 hdfs_journalnode_data_dir: /var/lib/hadoop-hdfs/journal
 hdfs_datanode_data_dir: /var/lib/hdfs/data/
+
+kafka_conf_dir: /etc/kafka/conf/
