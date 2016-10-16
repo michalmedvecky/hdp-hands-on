@@ -31,7 +31,6 @@
 - name: Create Docker network
   shell: "if [ `docker network  ls |grep kafkanet|wc -l` -eq 0 ]; then docker network create kafkanet; fi"
   tags: [deploy]
-  when: "ansible_version.full < 2.2"
 # net-alias and net not supported in Ansible yet
 #- name: Start kafka containers
 #  docker:
