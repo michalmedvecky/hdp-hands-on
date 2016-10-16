@@ -18,6 +18,7 @@
     - "hdfs dfs -chown -R hdfs.hadoop /hdp"
     - "hdfs dfs -chmod -R 555 /hdp/apps/{{ hdp_version.stdout }}/tez"
     - "hdfs dfs -chmod -R 444 /hdp/apps/{{ hdp_version.stdout }}/tez/tez.tar.gz"
+  run_once: yes
   tags: [tez]
 
 - name: Configure Tez

@@ -1,0 +1,6 @@
+{%- macro nimbus(clustername) %}
+{%- set comma = joiner(",") -%}
+{%- for host in groups[clustername] if host in groups['storm-nimbus'] -%}
+{{- comma() }}{{ hostvars[host]['hadoop_hostname']|default(hostvars[host]['inventory_hostname']) }}
+{%- endfor -%}
+{% endmacro -%}

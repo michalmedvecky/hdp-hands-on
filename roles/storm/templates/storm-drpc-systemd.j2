@@ -1,0 +1,13 @@
+[Unit]
+Description="Storm drpc"
+
+[Service]
+Type=simple
+User=storm
+Group=hadoop
+ExecStart=/usr/bin/storm drpc
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+

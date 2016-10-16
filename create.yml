@@ -35,7 +35,7 @@
       with_items:
         - { type: 't2.large', hostname: 'master-1', tags: 'hdp-cluster-1,zookeeper,hdfs-primary,hdfs-namenode,hdfs-journalnode,yarn,yarn-resourcemanager', ansible_zookeeper_server_id: 1 }
         - { type: 't2.large', hostname: 'master-2', tags: 'hdp-cluster-1,zookeeper,hdfs-secondary,hdfs-namenode,hdfs-journalnode,mapred,mapred-historyserver,yarn,yarn-resourcemanager', ansible_zookeeper_server_id: 2 }
-        - { type: 't2.small', hostname: 'master-3', tags: 'hdp-cluster-1,zookeeper,hdfs-journalnode,mapred,yarn', ansible_zookeeper_server_id: 3 }
+        - { type: 't2.large', hostname: 'master-3', tags: 'hdp-cluster-1,zookeeper,hdfs-journalnode,mapred,yarn,storm-nimbus,tez', ansible_zookeeper_server_id: 3 }
       tags: [master-nodes]
 
     - name: Provision datanodes
@@ -77,3 +77,23 @@
         - { type: 't2.small', hostname: 'kafka-1', tags: 'hdp-cluster-1,hdfs,kafka' }
         - { type: 't2.small', hostname: 'kafka-2', tags: 'hdp-cluster-1,hdfs,kafka' }
       tags: [kafka-brokers]
+
+    - name: Provision storm nodes 
+      ec2:
+         key_name: '{{ aws_key }}'
+         instance_type: '{{ item.type }}'
+         region: '{{ aws_region }}'
+         image: ami-e0c19f83
+         wait: yes
+         group: '{{ hadoop_cluster }}-sg'
+#         placement_group: '{{ aws_placement_group }}'
+         count: 1
+         vpc_subnet_id: '{{ aws_subnet }}'
+         assign_public_ip: yes
+         instance_tags:
+           hostname: '{{ item.hostname }}'
+           tags: '{{ item.tags }}'
+      with_items:
+        - { type: 't2.large', hostname: 'storm-supervisor-1', tags: 'hdp-cluster-1,hdfs,storm-supervisor' }
+        - { type: 't2.large', hostname: 'storm-supervisor-2', tags: 'hdp-cluster-1,hdfs,storm-supervisor' }
+      tags: [storm-nodes]

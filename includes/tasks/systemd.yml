@@ -1,4 +1,4 @@
-- name: systemd start script
+- name: systemd start script {{ script_name }}
   template:
     src: '{{ script_name }}-systemd.j2'
     dest: '/etc/systemd/system/{{ script_name }}.service'

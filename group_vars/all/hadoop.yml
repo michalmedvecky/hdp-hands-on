@@ -12,3 +12,4 @@ hdfs_datanode_data_dir: /var/lib/hdfs/data/
 kafka_conf_dir: /etc/kafka/conf
 hive_hcatalog_conf_dir: /etc/hive-hcatalog/conf
 tez_conf_dir: /etc/tez/conf
+storm_conf_dir: /etc/storm/conf

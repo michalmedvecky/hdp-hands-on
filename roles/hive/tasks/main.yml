@@ -1,0 +1,15 @@
+---
+
+- name: Install Hive-hcatalog package
+  yum: name=hive-hcatalog state=installed
+  tags: [hive]
+
+- name: Configure Hive-hcatalog
+  template: src='{{ item }}.j2' dest='{{ hive_hcatalog_conf_dir }}/{{ item }}' owner=root mode=0644
+  with_items: [hcat-env.sh]
+  tags: [hive]
+
+- name: Create Log directory
+  file: path=/var/log/webhcat owner=hcat group-hadoop mode=0755
+  tags: [hive]
+

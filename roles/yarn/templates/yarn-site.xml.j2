@@ -94,7 +94,7 @@
 {#{% if 'yarn-resourcemanager' in group_names %}#}
     <property>
         <name>yarn.resourcemanager.nodes.exclude-path</name>
-        <value>/opt/hadoop/etc/hadoop/yarn.exclude</value>
+        <value>{{ hadoop_conf_dir }}/yarn.exclude</value>
     </property>
 {% if 'yarn-resourcemanager' in group_names %}
     <property>

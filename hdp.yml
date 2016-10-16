@@ -10,3 +10,4 @@
     - { role: mapred, when: '"mapred" in group_names' }
     - { role: kafka, when: '"kafka" in group_names' }
     - { role: tez, when: '"tez" in group_names' }
+    - { role: storm, when: '"storm-nimbus" in group_names or "storm-supervisor" in group_names' }

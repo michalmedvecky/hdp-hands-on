@@ -10,14 +10,5 @@
   notify:
     - restart mapred historyserver
 
-#- name: create mapred command
-#  template:
-#    src: bin/mapred.j2
-#    dest: /usr/bin/mapred
-#    mode: 0755
-#  tags:
-#    - hadoop
-#    - mapred
-
 - include: historyserver.yml
   when: '"mapred-historyserver" in group_names'

@@ -1,0 +1,13 @@
+[Unit]
+Description="Storm nimbus"
+
+[Service]
+Type=simple
+User=storm
+Group=hadoop
+ExecStart=/usr/bin/storm nimbus
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
